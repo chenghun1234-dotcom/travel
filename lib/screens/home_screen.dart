@@ -171,25 +171,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildRegionFilter() {
     return SizedBox(
-      height: 46,
+      height: 52,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         itemCount: _regions.length,
         itemBuilder: (context, i) {
           final region = _regions[i];
           final isSelected = region == _selectedRegion;
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: FilterChip(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
               label: Text(region),
               selected: isSelected,
               onSelected: (_) {
                 setState(() => _selectedRegion = region);
                 _applyFilter();
               },
+              showCheckmark: false,
               selectedColor: AppTheme.primary.withOpacity(0.15),
-              checkmarkColor: AppTheme.primary,
+              backgroundColor: Colors.white,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              side: BorderSide.none,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              labelStyle: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
+              ),
             ),
           );
         },

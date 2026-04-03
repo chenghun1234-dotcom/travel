@@ -62,11 +62,12 @@ class AppTheme {
       ),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: surface,
+      backgroundColor: Colors.white,
       selectedColor: primary.withOpacity(0.15),
       labelStyle: const TextStyle(
           fontFamily: 'NotoSansKR', fontSize: 13, color: textPrimary),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       side: BorderSide.none,
     ),
