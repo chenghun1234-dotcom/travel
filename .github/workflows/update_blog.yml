@@ -3,6 +3,10 @@ name: Daily Tourism Blog Update
 on:
   workflow_dispatch:
 
+concurrency:
+  group: auto-content-main
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -36,12 +40,18 @@ jobs:
 
       - name: Commit and Push changes
         run: |
+          set -e
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
-          git commit -m "chore: update festival data $(date +'%Y-%m-%d') [skip ci]" || echo "No changes to commit"
-          git pull --rebase origin main
-          git push origin main
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: update festival data $(date +'%Y-%m-%d') [skip ci]"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

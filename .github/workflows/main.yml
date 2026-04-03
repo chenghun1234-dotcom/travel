@@ -5,6 +5,10 @@ on:
     - cron: '0 21 * * *' 
   workflow_dispatch:      
 
+concurrency:
+  group: auto-content-main
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pages: write
@@ -44,12 +48,18 @@ jobs:
       # 4. 결과 커밋
       - name: Commit and Push
         run: |
+          set -e
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
-          git commit -m "chore: update festival data $(date +'%Y-%m-%d')" || echo "No changes to commit"
-          git pull --rebase origin main
-          git push origin main
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: update festival data $(date +'%Y-%m-%d')"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
 
       # 5. Flutter 빌드 및 배포
       - name: Set up Flutter
