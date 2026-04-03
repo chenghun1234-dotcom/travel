@@ -11,7 +11,7 @@ import json
 import logging
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
@@ -21,6 +21,7 @@ import requests
 # 스크립트 디렉터리 기준으로 config import
 sys.path.insert(0, str(Path(__file__).parent))
 from config import (
+    FESTIVAL_SEARCH_DAYS_AHEAD,
     IMAGES_DIR,
     POSTS_DIR,
     TOUR_API_BASE,
@@ -147,8 +148,8 @@ def fetch_all_festivals(start_date: str) -> list[dict]:
     return festivals
 
 
-def is_in_current_month(item: dict, now: datetime) -> bool:
-    """이번 달과 겹치는 축제만 필터링"""
+def is_within_search_window(item: dict, now: datetime) -> bool:
+    """FESTIVAL_SEARCH_DAYS_AHEAD 일 이내에 시작되거나 진행 중인 축제만 필터"""
     start_raw = str(item.get("eventstartdate", ""))
     end_raw = str(item.get("eventenddate", ""))
     try:
@@ -157,13 +158,9 @@ def is_in_current_month(item: dict, now: datetime) -> bool:
     except ValueError:
         return False
 
-    month_start = datetime(now.year, now.month, 1)
-    if now.month == 12:
-        next_month = datetime(now.year + 1, 1, 1)
-    else:
-        next_month = datetime(now.year, now.month + 1, 1)
-
-    return start < next_month and end >= month_start
+    window_end = now + timedelta(days=FESTIVAL_SEARCH_DAYS_AHEAD)
+    # 축제가 오늘 이전에 끝났으면 제외, 검색 창 안에서 시작하면 포함
+    return end >= now and start <= window_end
 
 
 def enrich_festival(item: dict) -> dict:
@@ -206,10 +203,10 @@ def main() -> None:
     today = datetime.now()
     start_date = today.strftime("%Y%m%d")   # 오늘 이후 시작 축제
 
-    log.info("축제 데이터 수집 시작 (기준일: %s)", start_date)
+    log.info("축제 데이터 수집 시작 (기준일: %s, 탐색 창: %d일)", start_date, FESTIVAL_SEARCH_DAYS_AHEAD)
     raw_items = fetch_all_festivals(start_date)
-    raw_items = [item for item in raw_items if is_in_current_month(item, today)]
-    log.info("이번 달 기준 필터 적용 후 %d개 축제 유지", len(raw_items))
+    raw_items = [item for item in raw_items if is_within_search_window(item, today)]
+    log.info("검색 창 %d일 필터 후 %d개 축제 유지", FESTIVAL_SEARCH_DAYS_AHEAD, len(raw_items))
 
     log.info("%d개 축제 상세 정보 수집 중 …", len(raw_items))
     enriched: list[dict] = []

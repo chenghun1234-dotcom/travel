@@ -34,6 +34,48 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: Colors.white,
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: const TextStyle(
+            fontFamily: 'NotoSansKR',
+            fontWeight: FontWeight.w700,
+            fontSize: 15),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: primary,
+        side: const BorderSide(color: primary),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: const TextStyle(
+            fontFamily: 'NotoSansKR',
+            fontWeight: FontWeight.w600,
+            fontSize: 15),
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: surface,
+      selectedColor: primary.withOpacity(0.15),
+      labelStyle: const TextStyle(
+          fontFamily: 'NotoSansKR', fontSize: 13, color: textPrimary),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      side: BorderSide.none,
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: textPrimary,
+      contentTextStyle: TextStyle(
+          fontFamily: 'NotoSansKR', color: Colors.white, fontSize: 14),
+    ),
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
         fontFamily: 'NotoSansKR',

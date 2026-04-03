@@ -25,7 +25,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Future<void> _launchExternalUrl(String rawUrl) async {
     final uri = Uri.parse(rawUrl);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      await launchUrl(uri, webOnlyWindowName: '_blank');
     }
   }
 
@@ -280,7 +280,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   onPressed: () async {
                     final uri = Uri.parse(post.affiliateLink);
                     if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      await launchUrl(uri, webOnlyWindowName: '_blank');
                     }
                   },
                   icon: const Icon(Icons.hotel, size: 18),
