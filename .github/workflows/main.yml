@@ -48,6 +48,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
           git commit -m "chore: update festival data $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git pull --rebase origin main
           git push origin main
 
       # 5. Flutter 빌드 및 배포
