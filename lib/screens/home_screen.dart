@@ -172,14 +172,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRegionFilter() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: _regions.map((region) {
           final isSelected = region == _selectedRegion;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 56),
+              constraints: const BoxConstraints(minWidth: 72),
               child: ChoiceChip(
                 label: Text(
                   region,
@@ -194,14 +194,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 showCheckmark: false,
                 selectedColor: AppTheme.primary.withOpacity(0.15),
                 backgroundColor: Colors.white,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 labelStyle: TextStyle(
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
                 ),
