@@ -103,7 +103,7 @@ jobs:
         run: |
           flutter build web \
             --release \
-            --base-href "/"
+            --base-href "/travel/"
 
       - name: GitHub Pages 배포
         uses: peaceiris/actions-gh-pages@v4
