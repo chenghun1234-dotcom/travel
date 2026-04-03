@@ -170,40 +170,45 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRegionFilter() {
-    return SizedBox(
-      height: 52,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        itemCount: _regions.length,
-        itemBuilder: (context, i) {
-          final region = _regions[i];
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        children: _regions.map((region) {
           final isSelected = region == _selectedRegion;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(region),
-              selected: isSelected,
-              onSelected: (_) {
-                setState(() => _selectedRegion = region);
-                _applyFilter();
-              },
-              showCheckmark: false,
-              selectedColor: AppTheme.primary.withOpacity(0.15),
-              backgroundColor: Colors.white,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              side: BorderSide.none,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              labelStyle: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 56),
+              child: ChoiceChip(
+                label: Text(
+                  region,
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
+                ),
+                selected: isSelected,
+                onSelected: (_) {
+                  setState(() => _selectedRegion = region);
+                  _applyFilter();
+                },
+                showCheckmark: false,
+                selectedColor: AppTheme.primary.withOpacity(0.15),
+                backgroundColor: Colors.white,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                labelStyle: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
+                ),
               ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }
