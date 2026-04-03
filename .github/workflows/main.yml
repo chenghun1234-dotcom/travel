@@ -31,6 +31,9 @@ jobs:
           TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MRT_PARTNER_ID: ${{ secrets.MRT_PARTNER_ID }}
+          GITHUB_PAGES_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
+          NAVER_SITE_VERIFICATION: ${{ secrets.NAVER_SITE_VERIFICATION }}
         run: python scripts/update_festivals.py
 
       - name: Commit and Push
@@ -40,3 +43,21 @@ jobs:
           git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
           git commit -m "chore: daily festival update $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+
+      - name: Install Flutter Dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release --web-renderer canvaskit
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
