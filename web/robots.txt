@@ -7,4 +7,4 @@ Allow: /
 User-agent: Yeti
 Allow: /
 
-Sitemap: https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/sitemap.xml
+Sitemap: https://chenghun1234-dotcom.github.io/travel/sitemap.xml
