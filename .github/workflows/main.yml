@@ -78,6 +78,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
-          # 커스텀 도메인 사용 시: CUSTOM_DOMAIN 시크릿에 도메인 입력 (예: www.내도메인.com)
-          # 미설정 시 GitHub 기본 주소 사용 (chenghun1234-dotcom.github.io/travel)
-          cname: ${{ secrets.CUSTOM_DOMAIN }}
+          cname: k-festa.nextfintechai.com

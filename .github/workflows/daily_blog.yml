@@ -110,6 +110,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
+          cname: k-festa.nextfintechai.com
           publish_branch: gh-pages
           commit_message: '🤖 Auto-deploy: ${{ github.run_number }} [${{ github.sha }}]'
           force_orphan: false
