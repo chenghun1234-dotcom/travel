@@ -1,0 +1,48 @@
+# .gitignore — Flutter + Python 통합 프로젝트
+
+# ── Flutter ──────────────────────────────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+
+# Android
+android/
+ios/
+linux/
+macos/
+windows/
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env
+*.egg-info/
+dist/
+.pytest_cache/
+
+# ── IDE ───────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── 민감한 설정 ───────────────────────────────────────────────
+# API 키는 절대 커밋하지 마세요! GitHub Secrets를 사용하세요.
+.env.local
+secrets.json
+
+# ── 생성된 파일 (CI에서 생성됨) ──────────────────────────────
+# assets/posts/*.md   <- CI가 자동 생성, 트래킹 여부는 선택

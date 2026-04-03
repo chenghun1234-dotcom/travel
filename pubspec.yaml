@@ -1,0 +1,53 @@
+name: travel_blog
+description: 한국 축제 여행 블로그 - AI 자동화 콘텐츠
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Markdown 렌더링
+  flutter_markdown: ^0.7.3
+  markdown: ^7.2.2
+
+  # SEO 지원 (HTML 오버레이 렌더링)
+  seo_renderer: ^2.1.0
+
+  # HTTP 통신
+  http: ^1.2.1
+
+  # 날짜 포맷
+  intl: ^0.19.0
+
+  # URL 라우팅
+  go_router: ^13.2.0
+
+  # 이미지 캐싱
+  cached_network_image: ^3.3.1
+
+  # 공유 기능
+  share_plus: ^9.0.0
+  url_launcher: ^6.3.0
+
+  # 로컬 스토리지
+  shared_preferences: ^2.2.3
+
+  # 아이콘
+  cupertino_icons: ^1.0.6
+  font_awesome_flutter: ^10.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/posts/
