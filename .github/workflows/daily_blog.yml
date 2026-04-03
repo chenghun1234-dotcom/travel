@@ -12,6 +12,10 @@ on:
         required: false
         default: 'false'
 
+concurrency:
+  group: auto-content-main
+  cancel-in-progress: false
+
 # 저장소에 쓸 권한 필요
 permissions:
   contents: write
@@ -81,7 +85,6 @@ jobs:
       - name: Flutter SDK 설정
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
 
@@ -105,7 +108,7 @@ jobs:
             --base-href "/"
 
       - name: GitHub Pages 배포
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
@@ -135,8 +138,15 @@ jobs:
 
       - name: Git 커밋 & 푸시
         run: |
+          set -e
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add assets/posts/
-          git diff --staged --quiet || git commit -m "🎉 자동 포스트 업데이트 $(date '+%Y-%m-%d')"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "🎉 자동 포스트 업데이트 $(date '+%Y-%m-%d')"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
