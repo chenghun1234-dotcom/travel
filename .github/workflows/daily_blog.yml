@@ -51,6 +51,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MYREALTRIP_REFERRER_ID: ${{ secrets.MYREALTRIP_REFERRER_ID }}
           MRT_PARTNER_ID: ${{ secrets.MRT_PARTNER_ID }}
+          GITHUB_PAGES_BASE_URL: https://k-festa.nextfintechai.com
         run: python scripts/pipeline.py
 
       # 변경된 파일을 임시 저장 (다음 Job에서 사용)
@@ -103,7 +104,7 @@ jobs:
         run: |
           flutter build web \
             --release \
-            --base-href "/travel/"
+            --base-href "/"
 
       - name: GitHub Pages 배포
         uses: peaceiris/actions-gh-pages@v4
