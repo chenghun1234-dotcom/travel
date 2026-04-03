@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!--
+    ══════════════════════════════════════════════════════════
+    SEO 최적화 index.html
+    - update_seo_meta.py가 매일 <meta> 태그를 자동 업데이트
+    - Flutter Web canvaskit 렌더러 + seo_renderer 패키지 조합
+    ══════════════════════════════════════════════════════════
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── 기본 SEO ──────────────────────────────────────────── -->
+  <title>진주남강유등축제 2026 | 한국 축제 여행 가이드</title>
+  <meta name="description" content="가을 밤 남강에 수천 개의 등불이 일렁이는 장관. 진주남강유등축제 2026 완벽 가이드.">
+  <meta name="keywords" content="진주남강유등축제, 진주 축제, 진주 여행, 유등축제, 2026 축제">
+  <meta name="author" content="KoreaFestivalTrip">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://chenghun1234-dotcom.github.io/travel/">
+
+  <!-- ── Open Graph (SNS 공유) ─────────────────────────────── -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="한국 축제 여행 블로그">
+  <meta property="og:title" content="진주남강유등축제 2026 | 한국 축제 여행 가이드">
+  <meta property="og:description" content="가을 밤 남강에 수천 개의 등불이 일렁이는 장관. 진주남강유등축제 2026 완벽 가이드.">
+  <meta property="og:url" content="https://chenghun1234-dotcom.github.io/travel/">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=800">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- ── Twitter Card ──────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="진주남강유등축제 2026 | 한국 축제 여행 가이드">
+  <meta name="twitter:description" content="가을 밤 남강에 수천 개의 등불이 일렁이는 장관. 진주남강유등축제 2026 완벽 가이드.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=800">
+
+  <!-- ── 구조화 데이터 (JSON-LD) ────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "한국 축제 여행 블로그",
+    "description": "AI가 매일 업데이트하는 대한민국 전국 축제 여행 가이드",
+    "url": "https://chenghun1234-dotcom.github.io/travel/",
+    "inLanguage": "ko",
+    "publisher": {
+      "@type": "Organization",
+      "name": "KoreaFestivalTrip",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://chenghun1234-dotcom.github.io/travel/icons/Icon-512.png"
+      }
+    }
+  }
+  </script>
+
+  <!-- ── PWA ───────────────────────────────────────────────── -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- ── 파비콘 ────────────────────────────────────────────── -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- ── 폰트 프리로드 ─────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 로딩 화면 */
+    body {
+      margin: 0;
+      background-color: #F8F9FA;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    #loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 16px;
+    }
+    #loading .logo {
+      font-size: 48px;
+    }
+    #loading .title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #212529;
+    }
+    #loading .subtitle {
+      font-size: 13px;
+      color: #6C757D;
+    }
+    #loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #E9ECEF;
+      border-top-color: #1A73E8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+</head>
+<body>
+  <!-- 로딩 화면 (Flutter 초기화 전) -->
+  <div id="loading">
+    <div class="logo">🇰🇷</div>
+    <div class="title">한국 축제 여행 블로그</div>
+    <div class="subtitle">AI가 매일 업데이트하는 전국 축제 가이드</div>
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Flutter ServiceWorker -->
+  <script>
+    const serviceWorkerVersion = "211447601" /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */;
+    var scriptLoaded = false;
+    function loadMainDartJs() {
+      if (scriptLoaded) return;
+      scriptLoaded = true;
+      var scriptTag = document.createElement('script');
+      scriptTag.src = 'main.dart.js';
+      scriptTag.type = 'application/javascript';
+      document.body.append(scriptTag);
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+        navigator.serviceWorker.register(serviceWorkerUrl).then(function (reg) {
+          function waitForActivation(serviceWorker) {
+            serviceWorker.addEventListener('statechange', function () {
+              if (serviceWorker.state == 'activated') {
+                console.log('Installed new service worker.');
+                loadMainDartJs();
+              }
+            });
+          }
+          if (!reg.active && (reg.installing || reg.waiting)) {
+            waitForActivation(reg.installing || reg.waiting);
+          } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
+            console.log('New service worker available.');
+            reg.update();
+            waitForActivation(reg.installing);
+          } else {
+            console.log('Loading app from service worker.');
+            loadMainDartJs();
+          }
+        });
+        setTimeout(function () {
+          if (!scriptLoaded) {
+            console.log('Failed to load app from service worker. Trying to load directly.');
+            loadMainDartJs();
+          }
+        }, 4000);
+      });
+    } else {
+      window.addEventListener('load', function(ev) {
+        loadMainDartJs();
+      });
+    }
+  </script>
+
+  <!-- Flutter가 로드되면 로딩 화면 숨기기 -->
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.transition = 'opacity 0.3s ease';
+        loading.style.opacity = '0';
+        setTimeout(() => loading.remove(), 300);
+      }
+    });
+  </script>
+</body>
+</html>
