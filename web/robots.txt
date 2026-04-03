@@ -7,4 +7,4 @@ Allow: /
 User-agent: Yeti
 Allow: /
 
-Sitemap: https://chenghun1234-dotcom.github.io/travel/sitemap.xml
+Sitemap: https://k-festa.nextfintechai.com/sitemap.xml
