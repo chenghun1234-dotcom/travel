@@ -22,6 +22,26 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   BlogPost? _post;
   bool _isLoading = true;
 
+  Future<void> _launchExternalUrl(String rawUrl) async {
+    final uri = Uri.parse(rawUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  String _buildSearchAffiliateLink(BlogPost post, String keyword) {
+    final referrerId = Uri.tryParse(post.affiliateLink)?.queryParameters['referrer_id'];
+    final params = <String, String>{
+      'q': '${post.region} $keyword',
+      if (referrerId != null && referrerId.isNotEmpty) 'referrer_id': referrerId,
+    };
+    return const Uri(
+      scheme: 'https',
+      host: 'www.myrealtrip.com',
+      path: '/search',
+    ).replace(queryParameters: params).toString();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +108,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       _buildMarkdownBody(post),
                       const SizedBox(height: 40),
                       _buildAffiliateCard(post),
+                      const SizedBox(height: 20),
+                      _buildRetentionCard(post),
                       const SizedBox(height: 40),
                       _buildShareSection(post),
                       const SizedBox(height: 60),
@@ -275,12 +297,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 if (post.festivalAffiliateLink.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   OutlinedButton.icon(
-                    onPressed: () async {
-                      final uri = Uri.parse(post.festivalAffiliateLink);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
-                      }
-                    },
+                    onPressed: () => _launchExternalUrl(post.festivalAffiliateLink),
                     icon: const Icon(Icons.confirmation_num_outlined, size: 18),
                     label: Text(post.festivalAffiliateLinkText),
                     style: OutlinedButton.styleFrom(
@@ -289,12 +306,77 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                 ],
                 const SizedBox(height: 10),
+                OutlinedButton.icon(
+                  onPressed: () => _launchExternalUrl(
+                    _buildSearchAffiliateLink(post, '렌터카 교통패스'),
+                  ),
+                  icon: const Icon(Icons.directions_car_filled_outlined, size: 18),
+                  label: Text('${post.region} 렌터카/교통패스 보기 🚗'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 46),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 const Text(
                   '※ 파트너 활동의 일환으로 수수료를 제공받을 수 있음',
                   style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRetentionCard(BlogPost post) {
+    final mailto = Uri(
+      scheme: 'mailto',
+      path: '',
+      queryParameters: {
+        'subject': '[한국 축제 여행] 새 축제 알림 신청',
+        'body': '관심 축제: ${post.festivalName}\n관심 지역: ${post.region}\n',
+      },
+    ).toString();
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '놓치기 쉬운 다음 축제도 받아보세요 🔔',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            '지금 당장 예약하지 않더라도, 관심 지역의 할인/오픈 소식을 알림으로 받아 이탈을 줄일 수 있습니다.',
+            style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _launchExternalUrl(mailto),
+                  icon: const Icon(Icons.notifications_active_outlined),
+                  label: const Text('이메일 알림 신청'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => context.go('/about'),
+                  icon: const Icon(Icons.campaign_outlined),
+                  label: const Text('업데이트 채널 보기'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
