@@ -8,6 +8,7 @@ from pathlib import Path
 # ── 디렉토리 경로 ─────────────────────────────────────────────
 ROOT_DIR = Path(__file__).parent.parent
 POSTS_DIR = ROOT_DIR / "assets" / "posts"
+DATA_DIR = ROOT_DIR / "assets" / "data"
 IMAGES_DIR = ROOT_DIR / "assets" / "images"
 WEB_DIR = ROOT_DIR / "web"
 

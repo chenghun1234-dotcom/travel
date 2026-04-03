@@ -18,6 +18,7 @@ import google.generativeai as genai
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import (
+    DATA_DIR,
     GEMINI_API_KEY,
     GEMINI_MAX_TOKENS,
     GEMINI_MODEL,
@@ -36,6 +37,7 @@ log = logging.getLogger(__name__)
 
 RAW_INPUT = POSTS_DIR / "raw_festivals.json"
 INDEX_OUTPUT = POSTS_DIR / "index.json"
+LEGACY_OUTPUT = DATA_DIR / "festivals.json"
 
 # ── 지역코드 → 광역시도 매핑 (TourAPI areaCode 기준) ──────────
 AREA_CODE_MAP: dict[str, str] = {
@@ -204,6 +206,36 @@ def load_existing_index() -> list[dict]:
     return []
 
 
+def export_flutter_festival_json(posts: list[dict]) -> None:
+    """Flutter 단순 리스트 렌더링 호환용 JSON 생성 (assets/data/festivals.json)"""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    simplified: list[dict] = []
+    for p in posts:
+        start = str(p.get("festivalStart", "")).split("T")[0]
+        end = str(p.get("festivalEnd", "")).split("T")[0]
+        date_range = f"{start} ~ {end}" if start and end else "일정 추후 공지"
+
+        simplified.append(
+            {
+                "id": str(p.get("id", "")),
+                "slug": p.get("slug", ""),
+                "title": p.get("title", ""),
+                "image": p.get("imageUrl", ""),
+                "date": date_range,
+                "location": p.get("region", "전국"),
+                "content": p.get("content", ""),
+                "affiliate_link": p.get("affiliateLink", ""),
+            }
+        )
+
+    LEGACY_OUTPUT.write_text(
+        json.dumps(simplified, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    log.info("Flutter 호환 JSON 저장 완료: %s (%d개)", LEGACY_OUTPUT, len(simplified))
+
+
 def main() -> None:
     if not GEMINI_API_KEY:
         log.error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
@@ -257,6 +289,9 @@ def main() -> None:
         encoding="utf-8",
     )
     log.info("인덱스 업데이트 완료: %d개 신규, 총 %d개", len(new_posts), len(all_posts))
+
+    # Flutter 호환용 단순 데이터도 함께 생성
+    export_flutter_festival_json(all_posts)
 
 
 if __name__ == "__main__":
