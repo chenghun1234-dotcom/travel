@@ -264,11 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Text('🇰🇷 한국 축제 여행 블로그',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
           SizedBox(height: 8),
-          Text('AI가 매일 업데이트 · 한국관광공사 TourAPI 4.0 활용',
+          Text('© 2026 KoreaFestivalTrip',
               style: TextStyle(color: Colors.white54, fontSize: 12)),
-          SizedBox(height: 8),
-          Text('© 2026 KoreaFestivalTrip. Powered by Gemini 1.5 Flash & Flutter',
-              style: TextStyle(color: Colors.white38, fontSize: 11)),
         ],
       ),
     );
