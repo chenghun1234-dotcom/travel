@@ -158,3 +158,12 @@ def generate_refined_mrt_links(addr1: str, festival_title: str, partner_id: str 
         "stay_link": f"{base_url}?q={query_stays}&referrer_id={pid}",
         "festival_link": f"{base_url}?q={query_fest}&referrer_id={pid}",
     }
+
+
+def generate_refined_mrt_link(addr1: str, festival_title: str, partner_id: str | None = None) -> dict[str, str]:
+    """요청 예시 함수명 호환용 래퍼 (단수형 이름)."""
+    links = generate_refined_mrt_links(addr1, festival_title, partner_id)
+    return {
+        "stay_link": links["stay_link"],
+        "festival_link": links["festival_link"],
+    }
