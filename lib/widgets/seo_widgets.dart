@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:seo_renderer/seo_renderer.dart';
 
-// TextRendererStyle을 seo_widgets.dart를 임포트한 파일에서도 사용할 수 있도록 re-export
-export 'package:seo_renderer/seo_renderer.dart' show TextRendererStyle;
+// seo_renderer 패키지는 Flutter 3.22+ (dart:html 제거)와 호환되지 않아 제거됨.
+// SEO는 web/index.html 메타 태그 + JSON-LD + sitemap.xml 방식으로 처리.
 
-/// SEO용 텍스트 위젯 — TextRenderer(0.6.0 API) 래퍼
+/// TextRendererStyle stub — 기존 코드 호환성을 위해 유지
+enum TextRendererStyle { header1, header2, header3, header4, header5, header6, paragraph }
+
+/// SEO용 텍스트 위젯 stub — seo_renderer 없이 일반 Text로 렌더링
 class SeoText extends StatelessWidget {
   final String text;
   final TextStyle? style;
@@ -25,20 +27,17 @@ class SeoText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextRenderer(
-      style: tag,
-      child: Text(
-        text,
-        style: style,
-        maxLines: maxLines,
-        overflow: overflow,
-        textAlign: textAlign,
-      ),
+    return Text(
+      text,
+      style: style,
+      maxLines: maxLines,
+      overflow: overflow,
+      textAlign: textAlign,
     );
   }
 }
 
-/// SEO용 이미지 위젯 — ImageRenderer(0.6.0 API) 래퍼
+/// SEO용 이미지 위젯 stub — child를 그대로 렌더링
 class SeoImage extends StatelessWidget {
   final String src;
   final String alt;
@@ -53,10 +52,6 @@ class SeoImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ImageRenderer(
-      alt: alt,
-      src: src,
-      child: child,
-    );
+    return child;
   }
 }

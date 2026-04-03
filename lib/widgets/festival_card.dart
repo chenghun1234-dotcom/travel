@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:seo_renderer/seo_renderer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:travel_blog/models/blog_post.dart';
 
@@ -34,15 +33,11 @@ class FestivalCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: post.imageUrl.isNotEmpty
-                  ? ImageRenderer(
-                      alt: '${post.title} 축제 현장',
-                      src: post.imageUrl,
-                      child: Image.network(
-                        post.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Center(
-                          child: Icon(Icons.broken_image, size: 50),
-                        ),
+                  ? Image.network(
+                      post.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Center(
+                        child: Icon(Icons.broken_image, size: 50),
                       ),
                     )
                   : const Center(child: Icon(Icons.image, size: 50)),
@@ -52,17 +47,14 @@ class FestivalCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextRenderer(
-                    style: TextRendererStyle.header2,
-                    child: Text(
-                      post.title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  Text(
+                    post.title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -87,14 +79,11 @@ class FestivalCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  TextRenderer(
-                    style: TextRendererStyle.paragraph,
-                    child: Text(
-                      post.marketingCopy,
-                      style: const TextStyle(fontSize: 14, height: 1.5),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Text(
+                    post.marketingCopy,
+                    style: const TextStyle(fontSize: 14, height: 1.5),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
                   SizedBox(

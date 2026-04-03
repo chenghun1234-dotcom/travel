@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:seo_renderer/seo_renderer.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:travel_blog/models/blog_post.dart';
@@ -35,7 +34,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       'q': '${post.region} $keyword',
       if (referrerId != null && referrerId.isNotEmpty) 'referrer_id': referrerId,
     };
-    return const Uri(
+    return Uri(
       scheme: 'https',
       host: 'www.myrealtrip.com',
       path: '/search',

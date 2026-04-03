@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seo_renderer/seo_renderer.dart';
 import 'package:travel_blog/screens/home_screen.dart';
 import 'package:travel_blog/screens/post_detail_screen.dart';
 import 'package:travel_blog/screens/about_screen.dart';
@@ -38,15 +37,13 @@ class TravelBlogApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RobotDetector(
-      child: MaterialApp.router(
-        title: '한국 축제 여행 블로그 | KoreaFestivalTrip',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        routerConfig: _router,
-      ),
+    return MaterialApp.router(
+      title: '한국 축제 여행 블로그 | KoreaFestivalTrip',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      routerConfig: _router,
     );
   }
 }
