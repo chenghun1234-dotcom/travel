@@ -22,19 +22,22 @@ class AboutScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RendererWidgets.text(
-                  tag: RenderTag.h1,
-                  text: '🇰🇷 한국 축제 여행 블로그란?',
-                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                TextRenderer(
+                  style: TextRendererStyle.header1,
+                  child: Text(
+                    '🇰🇷 한국 축제 여행 블로그란?',
+                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                  ),
                 ),
                 const SizedBox(height: 20),
-                RendererWidgets.text(
-                  tag: RenderTag.p,
-                  text:
-                      '한국관광공사 TourAPI 4.0과 Google Gemini AI를 활용하여 '
-                      '전국 각지의 축제 정보를 매일 자동으로 업데이트하는 블로그입니다. '
-                      '단순한 일정 나열이 아닌, 실제 여행자의 시선으로 작성된 감성적인 여행 가이드를 제공합니다.',
-                  style: const TextStyle(fontSize: 15, height: 1.8),
+                TextRenderer(
+                  style: TextRendererStyle.paragraph,
+                  child: Text(
+                    '한국관광공사 TourAPI 4.0과 Google Gemini AI를 활용하여 '
+                    '전국 각지의 축제 정보를 매일 자동으로 업데이트하는 블로그입니다. '
+                    '단순한 일정 나열이 아닌, 실제 여행자의 시선으로 작성된 감성적인 여행 가이드를 제공합니다.',
+                    style: const TextStyle(fontSize: 15, height: 1.8),
+                  ),
                 ),
                 const SizedBox(height: 32),
                 _buildDivider('✨ 주요 기능'),
@@ -91,11 +94,13 @@ class AboutScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RendererWidgets.text(
-                  tag: RenderTag.h2,
-                  text: title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 16),
+                TextRenderer(
+                  style: TextRendererStyle.header2,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 16),
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(desc,

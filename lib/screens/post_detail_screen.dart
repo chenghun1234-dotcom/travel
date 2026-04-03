@@ -172,7 +172,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       children: [
         SeoText(
           text: post.title,
-          tag: RenderTag.h1,
+          tag: TextRendererStyle.header1,
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 12),

@@ -76,15 +76,15 @@ class PostCard extends StatelessWidget {
         children: [
           SeoText(
             text: post.title,
-            tag: RenderTag.h2,
+            tag: TextRendererStyle.header2,
             style: Theme.of(context).textTheme.titleLarge,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8),
           SeoText(
-            text: post.excerpt,
-            tag: RenderTag.p,
+            text: post.marketingCopy.isNotEmpty ? post.marketingCopy : post.excerpt,
+            tag: TextRendererStyle.paragraph,
             style: Theme.of(context).textTheme.bodyMedium,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,

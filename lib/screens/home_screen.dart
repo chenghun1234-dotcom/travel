@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 8),
           const SeoText(
             text: '한국 축제 여행',
-            tag: RenderTag.h2,
+            tag: TextRendererStyle.header2,
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 18,
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const SeoText(
               text: '🎉 대한민국 축제 여행 가이드',
-              tag: RenderTag.h1,
+              tag: TextRendererStyle.header1,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22,
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 8),
             const SeoText(
               text: 'AI가 매일 업데이트하는 전국 축제 정보',
-              tag: RenderTag.p,
+              tag: TextRendererStyle.paragraph,
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
           ],

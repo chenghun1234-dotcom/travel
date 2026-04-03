@@ -34,7 +34,7 @@ class FestivalCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: post.imageUrl.isNotEmpty
-                  ? RendererWidgets.image(
+                  ? ImageRenderer(
                       alt: '${post.title} 축제 현장',
                       src: post.imageUrl,
                       child: Image.network(
@@ -52,15 +52,17 @@ class FestivalCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RendererWidgets.text(
-                    tag: RenderTag.h2,
-                    text: post.title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  TextRenderer(
+                    style: TextRendererStyle.header2,
+                    child: Text(
+                      post.title,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -85,12 +87,14 @@ class FestivalCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  RendererWidgets.text(
-                    tag: RenderTag.p,
-                    text: post.marketingCopy,
-                    style: const TextStyle(fontSize: 14, height: 1.5),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                  TextRenderer(
+                    style: TextRendererStyle.paragraph,
+                    child: Text(
+                      post.marketingCopy,
+                      style: const TextStyle(fontSize: 14, height: 1.5),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(

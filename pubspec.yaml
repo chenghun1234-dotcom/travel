@@ -15,7 +15,7 @@ dependencies:
   markdown: ^7.2.2
 
   # SEO 지원 (HTML 오버레이 렌더링)
-  seo_renderer: ^2.1.0
+  seo_renderer: ^0.6.0
 
   # HTTP 통신
   http: ^1.2.1

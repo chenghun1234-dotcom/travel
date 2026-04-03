@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:seo_renderer/seo_renderer.dart';
 
+// TextRendererStyle을 seo_widgets.dart를 임포트한 파일에서도 사용할 수 있도록 re-export
+export 'package:seo_renderer/seo_renderer.dart' show TextRendererStyle;
+
+/// SEO용 텍스트 위젯 — TextRenderer(0.6.0 API) 래퍼
 class SeoText extends StatelessWidget {
   final String text;
   final TextStyle? style;
-  final RenderTag tag;
+  final TextRendererStyle tag;
   final int? maxLines;
   final TextOverflow? overflow;
   final TextAlign? textAlign;
@@ -21,17 +25,20 @@ class SeoText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RendererWidgets.text(
-      text: text,
-      style: style,
-      tag: tag,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
+    return TextRenderer(
+      style: tag,
+      child: Text(
+        text,
+        style: style,
+        maxLines: maxLines,
+        overflow: overflow,
+        textAlign: textAlign,
+      ),
     );
   }
 }
 
+/// SEO용 이미지 위젯 — ImageRenderer(0.6.0 API) 래퍼
 class SeoImage extends StatelessWidget {
   final String src;
   final String alt;
@@ -46,9 +53,9 @@ class SeoImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RendererWidgets.image(
-      src: src,
+    return ImageRenderer(
       alt: alt,
+      src: src,
       child: child,
     );
   }
