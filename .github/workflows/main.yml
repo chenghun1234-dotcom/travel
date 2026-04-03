@@ -2,53 +2,58 @@ name: Auto-Content & Deploy to Pages
 
 on:
   schedule:
-    - cron: '0 21 * * *' # 매일 한국 시간 오전 6시 실행
-  workflow_dispatch:      # 수동 실행 버튼
+    - cron: '0 21 * * *' 
+  workflow_dispatch:      
 
-# GitHub Pages 배포 및 자동 커밋을 위한 권한 설정 (필수)
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. 저장소 체크아웃
+      # 1. 저장소 체크아웃 (v3 -> v4 업데이트)
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 전체 히스토리 가져오기
+          fetch-depth: 0 
 
-      # 2. Python 환경 설정 및 데이터 수집/가공
+      # 2. Python 환경 설정 (v4 -> v5 업데이트)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Python Dependencies
-        run: pip install requests google-generativeai
+        run: |
+          pip install requests google-generativeai
 
+      # 3. 데이터 수집 실행
       - name: Run Content Generator
         env:
           TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MRT_PARTNER_ID: ${{ secrets.MRT_PARTNER_ID }}
+          GITHUB_PAGES_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
+          NAVER_SITE_VERIFICATION: ${{ secrets.NAVER_SITE_VERIFICATION }}
         run: python scripts/update_festivals.py
 
-      # 3. 갱신된 JSON 데이터를 main 브랜치에 커밋 및 푸시
-      - name: Commit and Push Updated JSON
+      # 4. 결과 커밋
+      - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/festivals.json
+          git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
           git commit -m "chore: update festival data $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push origin main
 
-      # 4. Flutter 환경 설정 및 웹 빌드 (Canvaskit 렌더러 사용)
+      # 5. Flutter 빌드 및 배포
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0' # 안정적인 최신 버전으로 고정
           channel: 'stable'
 
       - name: Install Flutter Dependencies
@@ -57,9 +62,11 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release --web-renderer canvaskit
 
-      # 5. 빌드된 결과물을 gh-pages 브랜치로 배포 (라이브 링크 생성)
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
+          # 커스텀 도메인 사용 시: CUSTOM_DOMAIN 시크릿에 도메인 입력 (예: www.내도메인.com)
+          # 미설정 시 GitHub 기본 주소 사용 (chenghun1234-dotcom.github.io/travel)
+          cname: ${{ secrets.CUSTOM_DOMAIN }}
