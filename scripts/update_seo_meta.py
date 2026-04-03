@@ -139,6 +139,23 @@ def update_index_html(post: dict | None) -> None:
         log.info("변경사항 없음")
 
 
+def update_html_meta(latest_festival_title: str) -> None:
+    """요청 예시 형태 호환용: 제목 중심 메타 자동 치환."""
+    if not HTML_FILE.exists():
+        log.warning("web/index.html을 찾을 수 없습니다.")
+        return
+
+    html = HTML_FILE.read_text(encoding="utf-8")
+    new_title = f"이번 주 추천 축제: {latest_festival_title}"
+
+    html = replace_title(html, new_title)
+    html = replace_meta_tag(html, "og:title", new_title)
+    html = replace_meta_tag(html, "twitter:title", new_title)
+
+    HTML_FILE.write_text(html, encoding="utf-8")
+    log.info("update_html_meta 적용 완료: %s", new_title)
+
+
 def inject_seo_tags_if_missing(html: str) -> str:
     """필수 SEO 태그가 없으면 <head> 내에 삽입"""
     tags_to_ensure = [

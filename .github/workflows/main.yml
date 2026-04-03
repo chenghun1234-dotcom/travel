@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install requests google-generativeai
+          pip install -r scripts/requirements.txt
 
       - name: Run Content Generator
         env:
@@ -37,6 +37,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/festivals.json
+          git add assets/data/festivals.json assets/posts/ web/index.html web/sitemap.xml web/robots.txt
           git commit -m "chore: daily festival update $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
