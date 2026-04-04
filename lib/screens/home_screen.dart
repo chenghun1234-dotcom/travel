@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:travel_blog/models/blog_post.dart';
 import 'package:travel_blog/services/blog_service.dart';
 import 'package:travel_blog/widgets/festival_card.dart';
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppTheme.surface,
       body: CustomScrollView(
         slivers: [
-          _buildAppBar(),
+          _buildAppBar(context),
           SliverToBoxAdapter(child: _buildHeroBanner()),
           SliverToBoxAdapter(child: _buildSearchBar()),
           SliverToBoxAdapter(child: _buildRegionFilter()),
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SliverAppBar _buildAppBar() {
+  SliverAppBar _buildAppBar(BuildContext context) {
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -101,8 +102,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       actions: [
-        TextButton(onPressed: () {}, child: const Text('축제 캘린더')),
-        TextButton(onPressed: () {}, child: const Text('지역별')),
+        TextButton(
+          onPressed: () => context.go('/calendar'),
+          child: const Text('축제 캘린더'),
+        ),
+        TextButton(
+          onPressed: () => context.go('/regions'),
+          child: const Text('지역별'),
+        ),
         const SizedBox(width: 8),
       ],
     );

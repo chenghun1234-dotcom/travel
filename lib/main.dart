@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_blog/screens/home_screen.dart';
 import 'package:travel_blog/screens/post_detail_screen.dart';
 import 'package:travel_blog/screens/about_screen.dart';
+import 'package:travel_blog/screens/calendar_screen.dart';
+import 'package:travel_blog/screens/regions_screen.dart';
 import 'package:travel_blog/theme/app_theme.dart';
 
 void main() {
@@ -26,6 +28,14 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/about',
       builder: (context, state) => const AboutScreen(),
+    ),
+    GoRoute(
+      path: '/calendar',
+      builder: (context, state) => const CalendarScreen(),
+    ),
+    GoRoute(
+      path: '/regions',
+      builder: (context, state) => const RegionsScreen(),
     ),
   ],
   // SEO: 404 fallback
