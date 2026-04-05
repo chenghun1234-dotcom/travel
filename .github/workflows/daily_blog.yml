@@ -5,6 +5,8 @@
 name: 🤖 Daily Blog Auto-Update
 
 on:
+  schedule:
+    - cron: '0 22 * * *'   # 매일 07:00 KST
   workflow_dispatch:          # 수동 트리거 (테스트용)
     inputs:
       force_regenerate:
@@ -70,9 +72,14 @@ jobs:
       - name: 생성된 파일 아티팩트 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: generated-posts
+          name: generated-site-content
           path: |
             assets/posts/
+            assets/data/festivals.json
+            web/index.html
+            web/sitemap.xml
+            web/robots.txt
+          if-no-files-found: error
           retention-days: 1
 
   # ──────────────────────────────────────────────────────────
@@ -92,8 +99,8 @@ jobs:
       - name: 생성된 파일 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: generated-posts
-          path: assets/posts/
+          name: generated-site-content
+          path: .
 
       - name: Flutter SDK 설정
         uses: subosito/flutter-action@v2
@@ -103,14 +110,6 @@ jobs:
 
       - name: Flutter 의존성 설치
         run: flutter pub get
-
-      - name: SEO 메타 태그 반영
-        env:
-          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          pip install -r scripts/requirements.txt -q
-          python scripts/update_seo_meta.py
 
       - name: Flutter Web 빌드
         run: |
@@ -145,20 +144,20 @@ jobs:
       - name: 생성된 파일 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: generated-posts
-          path: assets/posts/
+          name: generated-site-content
+          path: .
 
       - name: Git 커밋 & 푸시
         run: |
           set -e
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add assets/posts/
+          git add assets/posts/ assets/data/festivals.json web/index.html web/sitemap.xml web/robots.txt
           if git diff --staged --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "🎉 자동 포스트 업데이트 $(date '+%Y-%m-%d')"
+          git commit -m "🎉 자동 포스트 업데이트 $(date '+%Y-%m-%d') [skip ci]"
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
