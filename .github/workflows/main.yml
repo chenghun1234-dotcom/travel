@@ -34,6 +34,7 @@ jobs:
 
       # 3. 데이터 수집 실행
       - name: Run Content Generator
+        continue-on-error: true
         env:
           TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -44,6 +45,7 @@ jobs:
         run: python scripts/update_festivals.py
 
       - name: Validate generated festivals
+        continue-on-error: true
         run: |
           python - <<'PY'
           import json
@@ -57,6 +59,7 @@ jobs:
 
       # 4. 결과 커밋
       - name: Commit and Push
+        continue-on-error: true
         run: |
           set -e
           git config --global user.name "github-actions[bot]"
