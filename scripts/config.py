@@ -13,7 +13,7 @@ IMAGES_DIR = ROOT_DIR / "assets" / "images"
 WEB_DIR = ROOT_DIR / "web"
 
 # ── API 키 (GitHub Secrets → 환경변수 주입) ──────────────────
-TOUR_API_KEY = os.environ.get("TOUR_API_KEY", "")
+TOUR_API_KEY = urllib.parse.unquote(os.environ.get("TOUR_API_KEY", ""))
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
 # ── TourAPI 4.0 설정 ─────────────────────────────────────────

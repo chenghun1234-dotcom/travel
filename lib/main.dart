@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_blog/screens/home_screen.dart';
 import 'package:travel_blog/screens/post_detail_screen.dart';
-import 'package:travel_blog/screens/about_screen.dart';
 import 'package:travel_blog/screens/calendar_screen.dart';
 import 'package:travel_blog/screens/regions_screen.dart';
 import 'package:travel_blog/theme/app_theme.dart';
@@ -24,10 +23,6 @@ final GoRouter _router = GoRouter(
         final slug = state.pathParameters['slug']!;
         return PostDetailScreen(slug: slug);
       },
-    ),
-    GoRoute(
-      path: '/about',
-      builder: (context, state) => const AboutScreen(),
     ),
     GoRoute(
       path: '/calendar',

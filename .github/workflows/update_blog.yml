@@ -26,7 +26,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests google-generativeai
+        run: pip install -r scripts/requirements.txt
 
       - name: Run Script
         env:
@@ -37,6 +37,18 @@ jobs:
           GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
           NAVER_SITE_VERIFICATION: ${{ secrets.NAVER_SITE_VERIFICATION }}
         run: python scripts/update_festivals.py
+
+      - name: Validate generated festivals
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('assets/posts/raw_festivals.json')
+          data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else []
+          print(f'raw_festivals_count={len(data)}')
+          if not data:
+              raise SystemExit('raw_festivals.json is empty')
+          PY
 
       - name: Commit and Push changes
         run: |

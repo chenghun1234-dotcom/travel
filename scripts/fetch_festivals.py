@@ -14,7 +14,6 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
 
 import requests
 
@@ -38,29 +37,59 @@ log = logging.getLogger(__name__)
 RAW_OUTPUT = POSTS_DIR / "raw_festivals.json"
 
 
-def build_festival_url(event_start_date: str, page: int = 1, rows: int = 50) -> str:
-    """searchFestival API URL 생성"""
-    params = {
+def build_common_params() -> dict[str, Any]:
+    return {
         "serviceKey": TOUR_API_KEY,
-        "numOfRows": rows,
-        "pageNo": page,
         "MobileOS": "ETC",
         "MobileApp": "TravelBlog",
         "_type": "json",
+    }
+
+
+def build_festival_params(event_start_date: str, page: int = 1, rows: int = 50) -> dict[str, Any]:
+    """searchFestival API 파라미터 생성"""
+    params = {
+        **build_common_params(),
+        "numOfRows": rows,
+        "pageNo": page,
         "listYN": "Y",
         "arrange": "R",          # 수정일 역순 정렬 (최신순)
         "eventStartDate": event_start_date,
         "areaCode": "",           # 전국
     }
-    return f"{TOUR_API_BASE}/searchFestival1?{urlencode(params)}"
+    return params
 
 
-def fetch_page(url: str) -> dict[str, Any]:
-    """단일 페이지 요청"""
-    resp = requests.get(url, timeout=15)
-    resp.raise_for_status()
-    data = resp.json()
-    return data.get("response", {})
+def request_api(endpoint: str, params: dict[str, Any], timeout: int = 15, retries: int = 3) -> dict[str, Any]:
+    """TourAPI 공통 요청 (일시적 오류 재시도 + resultCode 검사)"""
+    url = f"{TOUR_API_BASE}/{endpoint}"
+    last_exc: Exception | None = None
+
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.get(url, params=params, timeout=timeout)
+            resp.raise_for_status()
+            data = resp.json().get("response", {})
+
+            header = data.get("header", {})
+            result_code = str(header.get("resultCode", ""))
+            result_msg = header.get("resultMsg", "")
+            if result_code and result_code != "0000":
+                raise RuntimeError(f"TourAPI resultCode={result_code}, resultMsg={result_msg}")
+
+            return data
+        except Exception as exc:
+            last_exc = exc
+            if attempt < retries:
+                backoff = 1.2 * attempt
+                log.warning("TourAPI 요청 실패(%s, 시도 %d/%d): %s", endpoint, attempt, retries, exc)
+                time.sleep(backoff)
+                continue
+            raise
+
+    if last_exc:
+        raise last_exc
+    return {}
 
 
 def parse_items(response_body: dict) -> list[dict]:
@@ -75,19 +104,18 @@ def parse_items(response_body: dict) -> list[dict]:
 
 def fetch_detail(content_id: str) -> dict:
     """축제 상세 정보 + 소개 정보 조회"""
-    detail_url = (
-        f"{TOUR_API_BASE}/detailCommon1?"
-        f"serviceKey={TOUR_API_KEY}"
-        f"&contentId={content_id}"
-        f"&contentTypeId=15"
-        f"&MobileOS=ETC&MobileApp=TravelBlog"
-        f"&_type=json"
-        f"&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&addrinfoYN=Y&overviewYN=Y"
-    )
+    params = {
+        **build_common_params(),
+        "contentId": content_id,
+        "contentTypeId": 15,
+        "defaultYN": "Y",
+        "firstImageYN": "Y",
+        "areacodeYN": "Y",
+        "addrinfoYN": "Y",
+        "overviewYN": "Y",
+    }
     try:
-        resp = requests.get(detail_url, timeout=10)
-        resp.raise_for_status()
-        items = parse_items(resp.json().get("response", {}))
+        items = parse_items(request_api("detailCommon1", params, timeout=10))
         return items[0] if items else {}
     except Exception as exc:
         log.warning("상세 조회 실패 contentId=%s: %s", content_id, exc)
@@ -96,17 +124,14 @@ def fetch_detail(content_id: str) -> dict:
 
 def fetch_image(content_id: str) -> str:
     """첫 번째 이미지 URL 반환 (제1유형 저작권 우선)"""
-    img_url = (
-        f"{TOUR_API_BASE}/detailImage1?"
-        f"serviceKey={TOUR_API_KEY}"
-        f"&contentId={content_id}"
-        f"&imageYN=Y&subImageYN=Y"
-        f"&MobileOS=ETC&MobileApp=TravelBlog&_type=json"
-    )
+    params = {
+        **build_common_params(),
+        "contentId": content_id,
+        "imageYN": "Y",
+        "subImageYN": "Y",
+    }
     try:
-        resp = requests.get(img_url, timeout=10)
-        resp.raise_for_status()
-        items = parse_items(resp.json().get("response", {}))
+        items = parse_items(request_api("detailImage1", params, timeout=10))
         # 제1유형(copyrightDiv=1) 우선, 없으면 첫 번째
         copyright1 = [i for i in items if str(i.get("cpyrhtDivCd", "")) == "1"]
         chosen = copyright1[0] if copyright1 else (items[0] if items else {})
@@ -123,10 +148,10 @@ def fetch_all_festivals(start_date: str) -> list[dict]:
     total_count: int | None = None
 
     while True:
-        url = build_festival_url(start_date, page=page)
         log.info("TourAPI 요청 page=%d …", page)
         try:
-            resp = fetch_page(url)
+            params = build_festival_params(start_date, page=page)
+            resp = request_api("searchFestival1", params)
             body = resp.get("body", {})
             if total_count is None:
                 total_count = int(body.get("totalCount", 0))
@@ -146,6 +171,20 @@ def fetch_all_festivals(start_date: str) -> list[dict]:
             break
 
     return festivals
+
+
+def dedupe_festivals(items: list[dict]) -> list[dict]:
+    unique: dict[str, dict] = {}
+    for item in items:
+        content_id = str(item.get("contentid") or item.get("contentId") or "")
+        if not content_id:
+            continue
+        unique[content_id] = item
+
+    def sort_key(item: dict) -> tuple[str, str]:
+        return (str(item.get("eventstartdate", "99999999")), str(item.get("title", "")))
+
+    return sorted(unique.values(), key=sort_key)
 
 
 def is_within_search_window(item: dict, now: datetime) -> bool:
@@ -201,12 +240,32 @@ def main() -> None:
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
     today = datetime.now()
-    start_date = today.strftime("%Y%m%d")   # 오늘 이후 시작 축제
+    start_dates = [
+        today.strftime("%Y%m%d"),
+        (today - timedelta(days=30)).strftime("%Y%m%d"),
+        (today - timedelta(days=90)).strftime("%Y%m%d"),
+    ]
 
-    log.info("축제 데이터 수집 시작 (기준일: %s, 탐색 창: %d일)", start_date, FESTIVAL_SEARCH_DAYS_AHEAD)
-    raw_items = fetch_all_festivals(start_date)
+    raw_items: list[dict] = []
+    for idx, start_date in enumerate(start_dates, 1):
+        log.info("축제 데이터 수집 시작 (%d/%d, 기준일: %s, 탐색 창: %d일)", idx, len(start_dates), start_date, FESTIVAL_SEARCH_DAYS_AHEAD)
+        fetched = fetch_all_festivals(start_date)
+        if fetched:
+            raw_items.extend(fetched)
+            if idx == 1:
+                break
+        else:
+            log.warning("기준일 %s 결과가 비어 있습니다.", start_date)
+
+    raw_items = dedupe_festivals(raw_items)
+
     raw_items = [item for item in raw_items if is_within_search_window(item, today)]
     log.info("검색 창 %d일 필터 후 %d개 축제 유지", FESTIVAL_SEARCH_DAYS_AHEAD, len(raw_items))
+
+    if not raw_items:
+        log.error("수집 가능한 축제 데이터가 없습니다. TOUR_API_KEY 또는 TourAPI 응답 상태를 확인하세요.")
+        RAW_OUTPUT.write_text("[]\n", encoding="utf-8")
+        sys.exit(1)
 
     log.info("%d개 축제 상세 정보 수집 중 …", len(raw_items))
     enriched: list[dict] = []

@@ -107,8 +107,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       _buildMarkdownBody(post),
                       const SizedBox(height: 40),
                       _buildAffiliateCard(post),
-                      const SizedBox(height: 20),
-                      _buildRetentionCard(post),
                       const SizedBox(height: 40),
                       _buildShareSection(post),
                       const SizedBox(height: 60),
@@ -322,60 +320,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRetentionCard(BlogPost post) {
-    final mailto = Uri(
-      scheme: 'mailto',
-      path: '',
-      queryParameters: {
-        'subject': '[한국 축제 여행] 새 축제 알림 신청',
-        'body': '관심 축제: ${post.festivalName}\n관심 지역: ${post.region}\n',
-      },
-    ).toString();
-
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '놓치기 쉬운 다음 축제도 받아보세요 🔔',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '지금 당장 예약하지 않더라도, 관심 지역의 할인/오픈 소식을 알림으로 받아 이탈을 줄일 수 있습니다.',
-            style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => _launchExternalUrl(mailto),
-                  icon: const Icon(Icons.notifications_active_outlined),
-                  label: const Text('이메일 알림 신청'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => context.go('/about'),
-                  icon: const Icon(Icons.campaign_outlined),
-                  label: const Text('업데이트 채널 보기'),
-                ),
-              ),
-            ],
           ),
         ],
       ),

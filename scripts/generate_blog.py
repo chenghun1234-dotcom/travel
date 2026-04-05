@@ -137,7 +137,53 @@ def generate_post(festival: dict, model: genai.GenerativeModel) -> str | None:
         return response.text
     except Exception as exc:
         log.error("Gemini 생성 실패 '%s': %s", festival.get("title"), exc)
-        return None
+        return build_fallback_post(festival)
+
+
+def build_fallback_post(festival: dict) -> str:
+    """Gemini 장애 시 사용할 템플릿 기반 포스트"""
+    title = festival.get("title", "추천 축제")
+    addr1 = festival.get("addr1", "전국")
+    addr2 = festival.get("addr2", "")
+    period = f"{festival.get('eventStartDate', '')} ~ {festival.get('eventEndDate', '')}"
+    tel = festival.get("tel", "정보 없음") or "정보 없음"
+    overview = festival.get("overview", "현장 운영 정보는 공식 안내를 참고해 주세요.") or "현장 운영 정보는 공식 안내를 참고해 주세요."
+
+    return f"""# {title}, 지금 가기 좋은 국내 축제 여행
+
+여행 기분을 가볍게 끌어올려 주는 {title} 소식이 도착했습니다. 계절의 분위기를 가장 가까이에서 느끼고 싶다면 이번 일정에 맞춰 한 번 방문해 보세요.
+
+## 축제 핵심 3가지
+
+### 1. 현장 분위기를 제대로 느낄 수 있는 일정
+{title}는 {period} 기간 동안 진행될 예정입니다. 여행 계획을 세울 때 가장 먼저 확인해야 할 기본 정보이니 일정 체크부터 해두면 좋습니다.
+
+### 2. 방문 전 알아두면 좋은 위치 정보
+행사 장소는 {addr1} {addr2}. 대중교통과 자가용 동선을 미리 확인하면 훨씬 여유 있게 움직일 수 있습니다.
+
+### 3. 공식 안내 기반 기본 정보
+문의처는 {tel}이며, 현재 확인된 소개 정보는 다음과 같습니다. {overview}
+
+## 방문 꿀팁
+
+- 주말보다 평일 또는 오픈 시간대 방문이 비교적 여유롭습니다.
+- 현장 주차와 대중교통 노선을 방문 전 다시 확인해 주세요.
+- 야외 일정이라면 날씨와 기온에 맞는 옷차림을 준비하는 것이 좋습니다.
+- 인기 지역 축제는 주변 숙소가 빨리 마감될 수 있어 미리 확인하는 편이 안전합니다.
+
+## 가는 방법
+
+**대중교통**: 행사장 인근 정류장/역 기준으로 이동 경로를 확인해 주세요.
+**자가용**: 내비게이션에 행사장 주소인 {addr1} {addr2}를 입력하고 임시 주차장 운영 여부를 함께 체크해 주세요.
+
+## 주변 숙소 및 투어 예약 팁
+
+축제 시간대가 이른 오전이거나 늦은 저녁까지 이어진다면 근처 숙소를 함께 보는 것이 편리합니다. 주변 명소와 연계해 1박 2일 일정으로 잡으면 여행 만족도가 더 높아집니다.
+
+## 마무리
+
+이번 시즌 국내 여행지를 찾고 있다면 {title}는 충분히 체크해볼 만한 일정입니다. 공식 공지와 현장 운영 시간을 다시 확인한 뒤 즐거운 여행을 준비해 보세요.
+"""
 
 
 def build_post_record(festival: dict, md_content: str) -> dict:

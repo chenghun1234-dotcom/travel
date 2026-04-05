@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Python Dependencies
         run: |
-          pip install requests google-generativeai
+          pip install -r scripts/requirements.txt
 
       # 3. 데이터 수집 실행
       - name: Run Content Generator
@@ -44,6 +44,18 @@ jobs:
           GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
           NAVER_SITE_VERIFICATION: ${{ secrets.NAVER_SITE_VERIFICATION }}
         run: python scripts/update_festivals.py
+
+      - name: Validate generated festivals
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('assets/posts/raw_festivals.json')
+          data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else []
+          print(f'raw_festivals_count={len(data)}')
+          if not data:
+              raise SystemExit('raw_festivals.json is empty')
+          PY
 
       # 4. 결과 커밋
       - name: Commit and Push

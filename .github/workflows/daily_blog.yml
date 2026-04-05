@@ -54,6 +54,18 @@ jobs:
           GITHUB_PAGES_BASE_URL: https://k-festa.nextfintechai.com
         run: python scripts/pipeline.py
 
+      - name: 생성 결과 검증
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('assets/posts/raw_festivals.json')
+          data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else []
+          print(f'raw_festivals_count={len(data)}')
+          if not data:
+              raise SystemExit('raw_festivals.json is empty')
+          PY
+
       # 변경된 파일을 임시 저장 (다음 Job에서 사용)
       - name: 생성된 파일 아티팩트 업로드
         uses: actions/upload-artifact@v4
