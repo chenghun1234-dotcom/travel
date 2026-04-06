@@ -72,11 +72,20 @@ def replace_canonical(html: str, url: str) -> str:
 
 
 def replace_placeholder_urls(html: str, base_url: str) -> str:
-    return re.sub(
+    target = f"{base_url.rstrip('/')}/"
+    # 플레이스홀더 치환
+    html = re.sub(
         r"https://YOUR_GITHUB_USERNAME\.github\.io(?:/YOUR_REPOSITORY_NAME)?/?",
-        f"{base_url.rstrip('/')}/",
+        target,
         html,
     )
+    # 실제 github.io 구 URL 치환 (커스텀 도메인 적용 후)
+    html = re.sub(
+        r"https://chenghun1234-dotcom\.github\.io(?:/travel)?/?(?=["'\s>])",
+        target,
+        html,
+    )
+    return html
 
 
 def upsert_meta_name(html: str, key: str, value: str) -> str:
