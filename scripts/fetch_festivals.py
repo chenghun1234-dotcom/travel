@@ -263,6 +263,15 @@ def main() -> None:
     log.info("검색 창 %d일 필터 후 %d개 축제 유지", FESTIVAL_SEARCH_DAYS_AHEAD, len(raw_items))
 
     if not raw_items:
+        # TourAPI 장애 시 기존 raw_festivals.json 재사용 (파이프라인 중단 방지)
+        if RAW_OUTPUT.exists():
+            existing = json.loads(RAW_OUTPUT.read_text(encoding="utf-8"))
+            if existing:
+                log.warning(
+                    "TourAPI 응답 없음 — 기존 raw_festivals.json (%d개) 재사용합니다.",
+                    len(existing),
+                )
+                return  # 기존 파일 유지, 정상 종료
         log.error("수집 가능한 축제 데이터가 없습니다. TOUR_API_KEY 또는 TourAPI 응답 상태를 확인하세요.")
         RAW_OUTPUT.write_text("[]\n", encoding="utf-8")
         sys.exit(1)
