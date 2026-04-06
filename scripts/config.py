@@ -24,7 +24,7 @@ TOUR_API_LANG = "ko"
 FESTIVAL_SEARCH_DAYS_AHEAD = 90
 
 # ── Gemini 설정 ───────────────────────────────────────────────
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.0-flash"
 GEMINI_MAX_TOKENS = 2048
 GEMINI_TEMPERATURE = 0.85   # 창의적 글쓰기를 위해 약간 높게
 

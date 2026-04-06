@@ -81,7 +81,7 @@ def replace_placeholder_urls(html: str, base_url: str) -> str:
     )
     # 실제 github.io 구 URL 치환 (커스텀 도메인 적용 후)
     html = re.sub(
-        r"https://chenghun1234-dotcom\.github\.io(?:/travel)?/?(?=["'\s>])",
+        r"https://chenghun1234-dotcom\.github\.io(?:/travel)?/?",
         target,
         html,
     )
